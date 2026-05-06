@@ -1,0 +1,31 @@
+{
+  "$schema": "WBDC Dealer Vault — version 1",
+  "site": "wiedmannbros.com",
+  "updated": "2026-05-06",
+  "categories": [
+    {
+      "id": "logos",
+      "name": "Logos",
+      "description": "Official Wiedmann Bros logos for use in dealer marketing materials. Available in multiple formats and color treatments."
+    },
+    {
+      "id": "banners",
+      "name": "Web Banners",
+      "description": "Pre-made banners for use on dealer websites, email signatures, and digital displays. Standard IAB ad sizes provided."
+    }
+  ],
+  "assets": [
+    {
+      "id": "wbd-logo-primary-svg",
+      "category": "logos",
+      "title": "WBD Primary Logo (SVG)",
+      "description": "Vector logo with full \"Wiedmann Bros Distributing\" wordmark. Scales to any size — recommended for print and high-resolution web use.",
+      "thumbnail": "/assets/images/vault/thumbs/wbd-logo-primary.png",
+      "download_url": "/assets/images/vault/files/wbd-logo-primary.svg",
+      "format": "SVG",
+      "size_kb": 12,
+      "dimensions": null,
+      "added": "2026-05-06"
+    }
+  ]
+}

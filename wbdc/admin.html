@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WBD Vault Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg:        #0a0b0d;
+    --surface:   #13161b;
+    --surface-2: #1c2028;
+    --line:      #2a2f38;
+    --line-soft: #20242c;
+    --text:      #e8eaee;
+    --text-2:    #9097a1;
+    --text-3:    #6b727c;
+    --accent:    #9ccb3b;
+    --accent-dk: #7fb02e;
+    --accent-tint: rgba(156, 203, 59, 0.08);
+    --error:     #f0a0a0;
+    --error-bg:  #2a1414;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', -apple-system, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    min-height: 100vh;
+  }
+
+  /* === Header ============================================================ */
+  .hdr {
+    border-bottom: 1px solid var(--line);
+    padding: 28px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .hdr-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .hdr-mark {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+  }
+  .hdr-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    margin: 0;
+  }
+  .hdr-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .hdr-meta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .hdr-meta strong {
+    color: var(--accent);
+  }
+
+  /* === Tabs ============================================================== */
+  .tabs {
+    display: flex;
+    border-bottom: 1px solid var(--line);
+    padding: 0 36px;
+  }
+  .tab {
+    padding: 16px 24px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s ease;
+  }
+  .tab:hover { color: var(--text-2); }
+  .tab.is-active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* === Tab panels ======================================================== */
+  .panel {
+    display: none;
+    padding: 36px;
+    max-width: 1400px;
+  }
+  .panel.is-active { display: grid; }
+
+  /* === Form panel ======================================================== */
+  .panel-add {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 32px;
+  }
+  .form-section {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 28px;
+  }
+  .form-section h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 6px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .form-section h3 + .section-hint {
+    color: var(--text-3);
+    font-size: 12px;
+    margin: -6px 0 22px;
+    padding-top: 6px;
+  }
+  .field {
+    margin-bottom: 20px;
+  }
+  .field:last-child { margin-bottom: 0; }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .field label {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    margin-bottom: 6px;
+  }
+  .field label .req {
+    color: var(--accent);
+    margin-left: 2px;
+  }
+  .field-hint {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 6px;
+    line-height: 1.45;
+  }
+  .field input[type="text"],
+  .field input[type="number"],
+  .field textarea,
+  .field select {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: 'Barlow', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: border-color 0.15s ease;
+  }
+  .field input[type="text"]:focus,
+  .field input[type="number"]:focus,
+  .field textarea:focus,
+  .field select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 70px;
+    font-family: 'Barlow', sans-serif;
+  }
+  .field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%239097a1' d='M0 0l6 8 6-8z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  /* === Output panel ====================================================== */
+  .output-panel h3 { color: var(--accent); }
+  .output-preview {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 18px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .preview-thumb {
+    width: 80px; height: 80px;
+    background: #fff;
+    background-image:
+      linear-gradient(45deg, #f5f5f5 25%, transparent 25%),
+      linear-gradient(-45deg, #f5f5f5 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #f5f5f5 75%),
+      linear-gradient(-45deg, transparent 75%, #f5f5f5 75%);
+    background-size: 12px 12px;
+    background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .preview-thumb img {
+    max-width: 90%; max-height: 90%; object-fit: contain;
+  }
+  .preview-thumb-fallback {
+    color: var(--text-3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .preview-info { flex: 1; min-width: 0; }
+  .preview-meta {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    margin-bottom: 4px;
+  }
+  .preview-meta .preview-format {
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 1px 6px;
+    border-radius: 2px;
+    background: var(--accent-tint);
+    margin-right: 4px;
+  }
+  .preview-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 2px 0 4px;
+  }
+  .preview-desc {
+    font-size: 12px;
+    color: var(--text-2);
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .json-output {
+    background: #0a0b0d;
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 18px;
+    font-family: 'SFMono-Regular', Consolas, Monaco, monospace;
+    font-size: 12.5px;
+    line-height: 1.55;
+    white-space: pre;
+    overflow-x: auto;
+    border-radius: 0;
+  }
+  .json-key { color: #9ccb3b; }
+  .json-string { color: #e8c884; }
+  .json-number { color: #c0a8e8; }
+  .json-null { color: #6b727c; font-style: italic; }
+  .json-empty {
+    text-align: center;
+    color: var(--text-3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 32px;
+    font-style: normal;
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .btn {
+    flex: 1;
+    padding: 12px 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn.is-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+  .btn.is-primary:hover {
+    background: var(--accent-dk);
+    border-color: var(--accent-dk);
+  }
+  .btn.is-copied {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+  .btn svg { width: 14px; height: 14px; }
+
+  /* === Categories panel ================================================== */
+  .panel-cats {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+  }
+  .cat-list {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    margin-bottom: 24px;
+  }
+  .cat-row {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line-soft);
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 16px;
+    align-items: center;
+  }
+  .cat-row:last-child { border-bottom: none; }
+  .cat-id {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+  .cat-info strong {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .cat-info span {
+    color: var(--text-2);
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+  .cat-remove {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text-3);
+    padding: 6px 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .cat-remove:hover {
+    color: #f0a0a0;
+    border-color: #4a2828;
+  }
+  .cat-empty {
+    padding: 32px;
+    text-align: center;
+    color: var(--text-3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* === Manifest panel ==================================================== */
+  .panel-manifest {
+    grid-template-columns: 1fr;
+    max-width: 1100px;
+  }
+  .manifest-output {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 24px;
+  }
+  .manifest-textarea {
+    width: 100%;
+    min-height: 400px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 16px;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 12.5px;
+    line-height: 1.55;
+    resize: vertical;
+  }
+  .manifest-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  /* === Help / footer ===================================================== */
+  .help {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .help-icon {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    color: var(--accent);
+  }
+  .help-text {
+    color: var(--text-2);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .help-text strong {
+    color: var(--text);
+  }
+  .help-text code {
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-family: 'SFMono-Regular', monospace;
+    font-size: 12px;
+    color: var(--accent);
+  }
+
+  @media (max-width: 1000px) {
+    .panel-add { grid-template-columns: 1fr; }
+    .field-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-mark">WBD</div>
+    <div>
+      <h1 class="hdr-title">Vault Admin</h1>
+      <div class="hdr-sub">Manifest Entry Generator</div>
+    </div>
+  </div>
+  <div class="hdr-meta">
+    Site: <strong>wiedmannbros.com</strong>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab is-active" data-target="panel-add">Add Asset</button>
+  <button class="tab" data-target="panel-cats">Manage Categories</button>
+  <button class="tab" data-target="panel-manifest">Preview Manifest</button>
+</nav>
+
+<!-- ===== ADD ASSET PANEL ================================================ -->
+<section class="panel panel-add is-active" id="panel-add">
+
+  <!-- LEFT COLUMN: Form -->
+  <div>
+    <div class="help">
+      <svg class="help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <div class="help-text">
+        <strong>Workflow:</strong> upload your file to S4S File Manager (recommended path: <code>/assets/images/vault/files/</code>), upload a thumbnail (<code>/assets/images/vault/thumbs/</code>), fill out this form, copy the JSON entry, paste into <code>manifest.json</code>, commit.
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>File Information</h3>
+      <p class="section-hint">The download URL is what dealers will copy or download. Thumbnail is the preview shown in the vault grid.</p>
+
+      <div class="field">
+        <label>Download URL <span class="req">*</span></label>
+        <input type="text" id="f-download" placeholder="/assets/images/vault/files/wbd-logo-primary.svg" autocomplete="off">
+        <div class="field-hint">Relative paths (starting with <code style="background:var(--surface-2);padding:1px 4px;border-radius:2px;">/</code>) work on the live site. Full URLs also accepted.</div>
+      </div>
+
+      <div class="field">
+        <label>Thumbnail URL</label>
+        <input type="text" id="f-thumbnail" placeholder="/assets/images/vault/thumbs/wbd-logo-primary.png" autocomplete="off">
+        <div class="field-hint">Optional. PNG/JPG preview shown in the vault. If blank, just shows the format badge.</div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Format <span class="req">*</span></label>
+          <input type="text" id="f-format" placeholder="SVG" autocomplete="off">
+          <div class="field-hint">Auto-filled from file extension.</div>
+        </div>
+        <div class="field">
+          <label>Size (KB)</label>
+          <input type="number" id="f-size" placeholder="12" min="0" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Dimensions <span style="color:var(--text-3);font-weight:400;">(optional, for banners)</span></label>
+        <input type="text" id="f-dims" placeholder="728×90" autocomplete="off">
+        <div class="field-hint">Leave blank for logos and other non-fixed-size assets.</div>
+      </div>
+    </div>
+
+    <div class="form-section" style="margin-top:24px;">
+      <h3>Display Information</h3>
+      <p class="section-hint">What dealers see in the vault. Title appears as the card heading; description below.</p>
+
+      <div class="field">
+        <label>Title <span class="req">*</span></label>
+        <input type="text" id="f-title" placeholder="WBD Primary Logo (SVG)" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label>Description</label>
+        <textarea id="f-desc" placeholder="Vector logo with full Wiedmann Bros wordmark. Scales to any size — recommended for print and high-resolution web use."></textarea>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Category <span class="req">*</span></label>
+          <select id="f-category"></select>
+        </div>
+        <div class="field">
+          <label>ID (auto-generated)</label>
+          <input type="text" id="f-id" placeholder="auto-from-title" autocomplete="off">
+          <div class="field-hint">URL-safe slug. Auto-fills from title.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: Output -->
+  <div class="output-panel">
+    <div class="form-section">
+      <h3>Live Preview</h3>
+      <div class="output-preview" id="preview">
+        <div class="preview-thumb"><span class="preview-thumb-fallback">no preview</span></div>
+        <div class="preview-info">
+          <div class="preview-meta"><span class="preview-format">FMT</span></div>
+          <div class="preview-title">Asset title</div>
+          <p class="preview-desc">Asset description will appear here.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section" style="margin-top:24px;">
+      <h3>JSON Entry</h3>
+      <p class="section-hint">Paste this into the <code style="background:var(--surface-2);padding:1px 4px;border-radius:2px;">"assets"</code> array of <code style="background:var(--surface-2);padding:1px 4px;border-radius:2px;">manifest.json</code>.</p>
+      <pre class="json-output" id="json-output"><span class="json-empty">Fill in the form to generate JSON</span></pre>
+      <div class="actions">
+        <button class="btn" type="button" id="btn-clear">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>
+          Clear
+        </button>
+        <button class="btn is-primary" type="button" id="btn-copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy JSON
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CATEGORIES PANEL ============================================== -->
+<section class="panel panel-cats" id="panel-cats">
+  <div>
+    <div class="help">
+      <svg class="help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <div class="help-text">
+        Categories group assets together on the vault page. Add a category here, then choose it from the dropdown when adding assets. <strong>Categories live in this admin tool's local storage</strong> — to persist them in the manifest, copy the categories JSON below and paste into manifest.json.
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Add Category</h3>
+      <div class="field-row">
+        <div class="field">
+          <label>Name <span class="req">*</span></label>
+          <input type="text" id="cat-name" placeholder="Web Banners" autocomplete="off">
+        </div>
+        <div class="field">
+          <label>ID (auto)</label>
+          <input type="text" id="cat-id" placeholder="auto-from-name" autocomplete="off">
+        </div>
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea id="cat-desc" placeholder="Pre-made banners for use on dealer websites and email signatures. Standard IAB ad sizes provided."></textarea>
+      </div>
+      <button class="btn is-primary" type="button" id="cat-add">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add Category
+      </button>
+    </div>
+
+    <div class="form-section" style="margin-top:24px;">
+      <h3>Current Categories</h3>
+      <div class="cat-list" id="cat-list"></div>
+    </div>
+
+    <div class="form-section" style="margin-top:24px;">
+      <h3>Categories JSON</h3>
+      <p class="section-hint">Copy this and paste into the <code style="background:var(--surface-2);padding:1px 4px;border-radius:2px;">"categories"</code> array of <code style="background:var(--surface-2);padding:1px 4px;border-radius:2px;">manifest.json</code>.</p>
+      <pre class="json-output" id="cat-json"></pre>
+      <div class="actions">
+        <button class="btn is-primary" type="button" id="cat-copy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Categories JSON
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PREVIEW MANIFEST PANEL ======================================== -->
+<section class="panel panel-manifest" id="panel-manifest">
+  <div>
+    <div class="help">
+      <svg class="help-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <div class="help-text">
+        Paste your existing <code>manifest.json</code> here to validate the structure and see asset/category counts. Edit and copy back to your manifest if needed.
+      </div>
+    </div>
+
+    <div class="manifest-output">
+      <textarea class="manifest-textarea" id="manifest-text" placeholder="Paste your manifest.json contents here…"></textarea>
+      <div id="manifest-stats" style="margin-top:14px;color:var(--text-2);font-size:13px;display:none;">
+        <strong style="color:var(--accent);" id="m-assets">0</strong> assets across
+        <strong style="color:var(--accent);" id="m-cats">0</strong> categories.
+        <span id="m-status"></span>
+      </div>
+      <div class="actions">
+        <button class="btn" type="button" id="m-validate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Validate
+        </button>
+        <button class="btn is-primary" type="button" id="m-format">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          Format JSON
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  // ========== STATE ===================================================
+  var state = {
+    categories: JSON.parse(localStorage.getItem('wbdv-cats') || 'null') || [
+      { id: 'logos', name: 'Logos', description: 'Official Wiedmann Bros logos for use in dealer marketing materials.' },
+      { id: 'banners', name: 'Web Banners', description: 'Pre-made banners for use on dealer websites and email signatures.' }
+    ]
+  };
+  function persist() {
+    localStorage.setItem('wbdv-cats', JSON.stringify(state.categories));
+  }
+
+  // ========== UTILS ===================================================
+  function slugify(s) {
+    return (s || '')
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s\-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+  function getExt(path) {
+    if (!path) return '';
+    var m = path.match(/\.([a-zA-Z0-9]+)(\?|$)/);
+    return m ? m[1].toUpperCase() : '';
+  }
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth()+1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0');
+  }
+  function syntaxHighlight(jsonStr) {
+    return jsonStr
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'json-number';
+        if (/^"/.test(match)) {
+          cls = /:$/.test(match) ? 'json-key' : 'json-string';
+        } else if (/true|false/.test(match)) {
+          cls = 'json-number';
+        } else if (/null/.test(match)) {
+          cls = 'json-null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+      });
+  }
+  function flash(btn) {
+    var orig = btn.innerHTML;
+    btn.classList.add('is-copied');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied';
+    setTimeout(function(){
+      btn.classList.remove('is-copied');
+      btn.innerHTML = orig;
+    }, 1600);
+  }
+
+  // ========== TABS ====================================================
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('is-active'); });
+      document.querySelectorAll('.panel').forEach(function(x){ x.classList.remove('is-active'); });
+      t.classList.add('is-active');
+      document.getElementById(t.dataset.target).classList.add('is-active');
+    });
+  });
+
+  // ========== CATEGORIES UI ===========================================
+  function refreshCategoryDropdown() {
+    var sel = document.getElementById('f-category');
+    sel.innerHTML = '';
+    state.categories.forEach(function(c){
+      var opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.name + ' (' + c.id + ')';
+      sel.appendChild(opt);
+    });
+    if (state.categories.length === 0) {
+      var opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = '— add categories first —';
+      sel.appendChild(opt);
+    }
+  }
+  function refreshCategoryList() {
+    var list = document.getElementById('cat-list');
+    list.innerHTML = '';
+    if (state.categories.length === 0) {
+      list.innerHTML = '<div class="cat-empty">No categories yet</div>';
+      return;
+    }
+    state.categories.forEach(function(c, i){
+      var row = document.createElement('div');
+      row.className = 'cat-row';
+      row.innerHTML =
+        '<div class="cat-id">' + c.id + '</div>' +
+        '<div class="cat-info"><strong></strong><span></span></div>';
+      row.querySelector('.cat-info strong').textContent = c.name;
+      row.querySelector('.cat-info span').textContent = c.description || '';
+      var btn = document.createElement('button');
+      btn.className = 'cat-remove';
+      btn.textContent = 'Remove';
+      btn.addEventListener('click', function(){
+        if (confirm('Remove category "' + c.name + '"?')) {
+          state.categories.splice(i, 1);
+          persist();
+          refreshAll();
+        }
+      });
+      row.appendChild(btn);
+      list.appendChild(row);
+    });
+  }
+  function refreshCategoryJson() {
+    var json = JSON.stringify(state.categories, null, 2);
+    var pre = document.getElementById('cat-json');
+    pre.innerHTML = state.categories.length === 0
+      ? '<span class="json-empty">No categories yet</span>'
+      : syntaxHighlight(json);
+  }
+  function refreshAll() {
+    refreshCategoryDropdown();
+    refreshCategoryList();
+    refreshCategoryJson();
+    updatePreview();
+    updateOutput();
+  }
+
+  document.getElementById('cat-name').addEventListener('input', function(e){
+    var idEl = document.getElementById('cat-id');
+    if (!idEl.dataset.userEdited) {
+      idEl.value = slugify(e.target.value);
+    }
+  });
+  document.getElementById('cat-id').addEventListener('input', function(e){
+    e.target.dataset.userEdited = '1';
+    e.target.value = slugify(e.target.value);
+  });
+  document.getElementById('cat-add').addEventListener('click', function(){
+    var name = document.getElementById('cat-name').value.trim();
+    var id = document.getElementById('cat-id').value.trim();
+    var desc = document.getElementById('cat-desc').value.trim();
+    if (!name) { alert('Category name is required.'); return; }
+    if (!id) id = slugify(name);
+    if (state.categories.some(function(c){ return c.id === id; })) {
+      alert('A category with id "' + id + '" already exists. Choose a different name or id.');
+      return;
+    }
+    state.categories.push({ id: id, name: name, description: desc });
+    persist();
+    document.getElementById('cat-name').value = '';
+    document.getElementById('cat-id').value = '';
+    document.getElementById('cat-id').removeAttribute('data-user-edited');
+    document.getElementById('cat-desc').value = '';
+    refreshAll();
+  });
+  document.getElementById('cat-copy').addEventListener('click', function(){
+    var btn = this;
+    var json = JSON.stringify(state.categories, null, 2);
+    navigator.clipboard.writeText(json).then(function(){ flash(btn); });
+  });
+
+  // ========== ADD ASSET FORM ==========================================
+  var fields = ['f-download', 'f-thumbnail', 'f-format', 'f-size', 'f-dims', 'f-title', 'f-desc', 'f-category', 'f-id'];
+  fields.forEach(function(id){
+    var el = document.getElementById(id);
+    el.addEventListener('input', function(){
+      // Auto-fill ID from title
+      if (id === 'f-title') {
+        var idEl = document.getElementById('f-id');
+        if (!idEl.dataset.userEdited) idEl.value = slugify(el.value);
+      }
+      // Auto-fill format from download URL
+      if (id === 'f-download') {
+        var fmtEl = document.getElementById('f-format');
+        if (!fmtEl.dataset.userEdited) fmtEl.value = getExt(el.value);
+      }
+      if (id === 'f-id') el.dataset.userEdited = '1';
+      if (id === 'f-format') el.dataset.userEdited = '1';
+      updatePreview();
+      updateOutput();
+    });
+    el.addEventListener('change', function(){ updatePreview(); updateOutput(); });
+  });
+
+  function getFormData() {
+    var get = function(id) { return (document.getElementById(id).value || '').trim(); };
+    return {
+      download_url: get('f-download'),
+      thumbnail: get('f-thumbnail'),
+      format: get('f-format').toUpperCase(),
+      size_kb: get('f-size') ? parseInt(get('f-size'), 10) : null,
+      dimensions: get('f-dims') || null,
+      title: get('f-title'),
+      description: get('f-desc'),
+      category: get('f-category'),
+      id: get('f-id')
+    };
+  }
+
+  function updatePreview() {
+    var d = getFormData();
+    var preview = document.getElementById('preview');
+    preview.querySelector('.preview-title').textContent = d.title || 'Asset title';
+    preview.querySelector('.preview-desc').textContent = d.description || 'Asset description will appear here.';
+
+    var meta = preview.querySelector('.preview-meta');
+    var html = '';
+    if (d.format) html += '<span class="preview-format">' + d.format + '</span>';
+    if (d.size_kb != null) html += ' ' + (d.size_kb < 1024 ? d.size_kb + ' KB' : (d.size_kb/1024).toFixed(1) + ' MB');
+    if (d.dimensions) html += ' · ' + d.dimensions;
+    meta.innerHTML = html || '<span class="preview-format">FMT</span>';
+
+    var thumb = preview.querySelector('.preview-thumb');
+    thumb.innerHTML = '';
+    if (d.thumbnail) {
+      var img = new Image();
+      img.src = d.thumbnail;
+      img.onload = function(){ thumb.innerHTML = ''; thumb.appendChild(img); };
+      img.onerror = function(){
+        thumb.innerHTML = '<span class="preview-thumb-fallback">' + (d.format || 'preview') + '</span>';
+      };
+      // Initial placeholder while loading
+      thumb.innerHTML = '<span class="preview-thumb-fallback">loading…</span>';
+    } else {
+      thumb.innerHTML = '<span class="preview-thumb-fallback">no preview</span>';
+    }
+  }
+
+  function updateOutput() {
+    var d = getFormData();
+    if (!d.title || !d.download_url) {
+      document.getElementById('json-output').innerHTML = '<span class="json-empty">Fill in title + download URL to generate JSON</span>';
+      return;
+    }
+    var entry = {
+      id: d.id || slugify(d.title),
+      category: d.category,
+      title: d.title,
+      description: d.description || '',
+      thumbnail: d.thumbnail || null,
+      download_url: d.download_url,
+      format: d.format || null,
+      size_kb: d.size_kb,
+      dimensions: d.dimensions,
+      added: todayISO()
+    };
+    var json = JSON.stringify(entry, null, 2);
+    document.getElementById('json-output').innerHTML = syntaxHighlight(json);
+  }
+
+  document.getElementById('btn-clear').addEventListener('click', function(){
+    if (!confirm('Clear all form fields?')) return;
+    fields.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el.tagName === 'SELECT') return;
+      el.value = '';
+      el.removeAttribute('data-user-edited');
+    });
+    updatePreview();
+    updateOutput();
+  });
+  document.getElementById('btn-copy').addEventListener('click', function(){
+    var btn = this;
+    var d = getFormData();
+    if (!d.title || !d.download_url) {
+      alert('Fill in title and download URL first.');
+      return;
+    }
+    var entry = {
+      id: d.id || slugify(d.title),
+      category: d.category,
+      title: d.title,
+      description: d.description || '',
+      thumbnail: d.thumbnail || null,
+      download_url: d.download_url,
+      format: d.format || null,
+      size_kb: d.size_kb,
+      dimensions: d.dimensions,
+      added: todayISO()
+    };
+    var json = JSON.stringify(entry, null, 2);
+    navigator.clipboard.writeText(json).then(function(){ flash(btn); });
+  });
+
+  // ========== MANIFEST PREVIEW ========================================
+  function validateManifest() {
+    var text = document.getElementById('manifest-text').value;
+    var statsEl = document.getElementById('manifest-stats');
+    var statusEl = document.getElementById('m-status');
+    if (!text.trim()) {
+      statsEl.style.display = 'none';
+      return null;
+    }
+    try {
+      var m = JSON.parse(text);
+      statsEl.style.display = 'block';
+      document.getElementById('m-assets').textContent = (m.assets || []).length;
+      document.getElementById('m-cats').textContent = (m.categories || []).length;
+      // Check for orphan assets (category not in categories list)
+      var catIds = (m.categories || []).map(function(c){ return c.id; });
+      var orphans = (m.assets || []).filter(function(a){ return catIds.indexOf(a.category) === -1; });
+      if (orphans.length > 0) {
+        statusEl.innerHTML = ' <span style="color:#f0a0a0;">⚠ ' + orphans.length + ' asset(s) reference unknown categories</span>';
+      } else {
+        statusEl.innerHTML = ' <span style="color:var(--accent);">✓ valid</span>';
+      }
+      return m;
+    } catch(e) {
+      statsEl.style.display = 'block';
+      statusEl.innerHTML = ' <span style="color:#f0a0a0;">⚠ Invalid JSON: ' + e.message + '</span>';
+      document.getElementById('m-assets').textContent = '—';
+      document.getElementById('m-cats').textContent = '—';
+      return null;
+    }
+  }
+  document.getElementById('manifest-text').addEventListener('input', validateManifest);
+  document.getElementById('m-validate').addEventListener('click', validateManifest);
+  document.getElementById('m-format').addEventListener('click', function(){
+    var m = validateManifest();
+    if (m) document.getElementById('manifest-text').value = JSON.stringify(m, null, 2);
+  });
+
+  // ========== INIT ====================================================
+  refreshAll();
+})();
+</script>
+
+</body>
+</html>

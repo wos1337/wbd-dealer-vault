@@ -1,0 +1,31 @@
+{
+  "$schema": "Orange Aftermarket Dealer Vault — version 1",
+  "site": "orangeaftermarket.com",
+  "updated": "2026-05-06",
+  "categories": [
+    {
+      "id": "logos",
+      "name": "Logos",
+      "description": "Orange Aftermarket logos for use in dealer marketing, signage, and digital media."
+    },
+    {
+      "id": "banners",
+      "name": "Web Banners",
+      "description": "Pre-made banners and digital ads. Standard IAB ad sizes for use on dealer websites and email signatures."
+    }
+  ],
+  "assets": [
+    {
+      "id": "oa-logo-primary-svg",
+      "category": "logos",
+      "title": "Orange Aftermarket Primary Logo (SVG)",
+      "description": "Vector logo for print and high-resolution web. Use this as the default logo treatment.",
+      "thumbnail": "/assets/images/vault/thumbs/oa-logo-primary.png",
+      "download_url": "/assets/images/vault/files/oa-logo-primary.svg",
+      "format": "SVG",
+      "size_kb": 14,
+      "dimensions": null,
+      "added": "2026-05-06"
+    }
+  ]
+}

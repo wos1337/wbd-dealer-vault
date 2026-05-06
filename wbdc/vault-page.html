@@ -1,0 +1,609 @@
+<!--
+  WBDC Dealer Resource Vault — paste into S4S extra page.
+  Settings:
+    - Restrict to: Registered Users Only
+    - Slug: dealer-resources (or your choice)
+
+  Updates: edit manifest.json in the GitHub repo. The page reads it on load.
+  Works inside frame.html (header/footer/styles inherited from S4S theme).
+-->
+
+<style>
+  /* Scope everything under .wbdv-vault to avoid leaking into the S4S frame */
+  .wbdv-vault {
+    --vlt-bg:        #0a0b0d;
+    --vlt-surface:   #13161b;
+    --vlt-surface-2: #1c2028;
+    --vlt-line:      #2a2f38;
+    --vlt-line-soft: #20242c;
+    --vlt-text:      #e8eaee;
+    --vlt-text-2:    #9097a1;
+    --vlt-text-3:    #6b727c;
+    --vlt-accent:    #9ccb3b;
+    --vlt-accent-dk: #7fb02e;
+    font-family: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--vlt-text);
+    background: var(--vlt-bg);
+    margin: 0 calc(50% - 50vw);
+    padding: 0;
+    width: 100vw;
+    box-sizing: border-box;
+    line-height: 1.55;
+  }
+  .wbdv-vault * { box-sizing: border-box; }
+
+  /* === Hero ============================================================== */
+  .wbdv-hero {
+    position: relative;
+    padding: 96px 48px 72px;
+    border-bottom: 1px solid var(--vlt-line);
+    overflow: hidden;
+  }
+  .wbdv-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--vlt-accent) 0%, var(--vlt-accent) 18%, transparent 18%, transparent 100%);
+  }
+  .wbdv-hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: end;
+  }
+  .wbdv-hero-eyebrow {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--vlt-accent);
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .wbdv-hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px; height: 2px;
+    background: var(--vlt-accent);
+  }
+  .wbdv-hero-title {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: clamp(42px, 5.5vw, 72px);
+    font-weight: 700;
+    line-height: 0.96;
+    letter-spacing: -0.015em;
+    color: var(--vlt-text);
+    margin: 0;
+    text-transform: none;
+  }
+  .wbdv-hero-title .wbdv-title-accent {
+    color: var(--vlt-accent);
+  }
+  .wbdv-hero-meta {
+    border-left: 1px solid var(--vlt-line);
+    padding-left: 32px;
+  }
+  .wbdv-hero-meta p {
+    color: var(--vlt-text-2);
+    font-size: 15px;
+    line-height: 1.65;
+    margin: 0;
+    max-width: 440px;
+  }
+  .wbdv-hero-stats {
+    display: flex;
+    gap: 32px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--vlt-line-soft);
+  }
+  .wbdv-stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--vlt-text);
+    line-height: 1;
+  }
+  .wbdv-stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--vlt-text-3);
+    margin-top: 6px;
+  }
+
+  /* === Loading / error states =========================================== */
+  .wbdv-loading,
+  .wbdv-error {
+    max-width: 1280px;
+    margin: 80px auto;
+    padding: 48px;
+    text-align: center;
+    color: var(--vlt-text-2);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .wbdv-error {
+    color: #f0a0a0;
+    border: 1px solid #4a2828;
+    background: #1a0e0e;
+  }
+
+  /* === Categories ======================================================== */
+  .wbdv-categories {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 48px 96px;
+  }
+  .wbdv-category {
+    margin-bottom: 80px;
+  }
+  .wbdv-category:last-child { margin-bottom: 0; }
+
+  .wbdv-cat-header {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 32px;
+    align-items: baseline;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--vlt-line);
+  }
+  .wbdv-cat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--vlt-accent);
+  }
+  .wbdv-cat-title-block h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0 0 8px;
+    text-transform: none;
+    color: var(--vlt-text);
+    letter-spacing: -0.01em;
+  }
+  .wbdv-cat-desc {
+    color: var(--vlt-text-2);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0;
+    max-width: 720px;
+  }
+  .wbdv-cat-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--vlt-text-3);
+    white-space: nowrap;
+  }
+  .wbdv-cat-count strong {
+    color: var(--vlt-text);
+    font-size: 14px;
+  }
+
+  /* === Asset grid ======================================================== */
+  .wbdv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--vlt-line);
+    border: 1px solid var(--vlt-line);
+  }
+  .wbdv-card {
+    background: var(--vlt-surface);
+    display: flex;
+    flex-direction: column;
+    transition: background 0.15s ease;
+  }
+  .wbdv-card:hover {
+    background: var(--vlt-surface-2);
+  }
+  .wbdv-card-thumb {
+    aspect-ratio: 4 / 3;
+    background: #fff;
+    background-image:
+      linear-gradient(45deg, #f5f5f5 25%, transparent 25%),
+      linear-gradient(-45deg, #f5f5f5 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #f5f5f5 75%),
+      linear-gradient(-45deg, transparent 75%, #f5f5f5 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--vlt-line);
+  }
+  .wbdv-card-thumb img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    display: block;
+  }
+  .wbdv-card-thumb-fallback {
+    color: var(--vlt-text-3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .wbdv-card-body {
+    padding: 20px 22px 18px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .wbdv-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--vlt-text-3);
+  }
+  .wbdv-card-format {
+    color: var(--vlt-accent);
+    border: 1px solid var(--vlt-accent);
+    padding: 2px 8px;
+    border-radius: 2px;
+    background: rgba(156, 203, 59, 0.08);
+  }
+  .wbdv-card-size,
+  .wbdv-card-dimensions {
+    color: var(--vlt-text-3);
+  }
+  .wbdv-card-meta-sep {
+    color: var(--vlt-line);
+  }
+  .wbdv-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--vlt-text);
+    margin: 0 0 8px;
+    letter-spacing: -0.005em;
+  }
+  .wbdv-card-desc {
+    color: var(--vlt-text-2);
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0 0 18px;
+    flex: 1;
+  }
+  .wbdv-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--vlt-line-soft);
+  }
+  .wbdv-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid var(--vlt-line);
+    background: transparent;
+    color: var(--vlt-text);
+    transition: all 0.15s ease;
+  }
+  .wbdv-btn:hover {
+    border-color: var(--vlt-accent);
+    color: var(--vlt-accent);
+    text-decoration: none;
+  }
+  .wbdv-btn.is-primary {
+    background: var(--vlt-accent);
+    border-color: var(--vlt-accent);
+    color: #0a0b0d;
+  }
+  .wbdv-btn.is-primary:hover {
+    background: var(--vlt-accent-dk);
+    border-color: var(--vlt-accent-dk);
+    color: #0a0b0d;
+  }
+  .wbdv-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  .wbdv-btn.is-copied {
+    background: var(--vlt-accent);
+    border-color: var(--vlt-accent);
+    color: #0a0b0d;
+  }
+
+  /* === Empty category ==================================================== */
+  .wbdv-empty {
+    padding: 48px;
+    text-align: center;
+    color: var(--vlt-text-3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--vlt-surface);
+    border: 1px solid var(--vlt-line);
+  }
+
+  /* === Responsive ======================================================== */
+  @media (max-width: 900px) {
+    .wbdv-hero {
+      padding: 64px 24px 48px;
+    }
+    .wbdv-hero-inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .wbdv-hero-meta {
+      border-left: none;
+      border-top: 1px solid var(--vlt-line);
+      padding-left: 0;
+      padding-top: 24px;
+    }
+    .wbdv-categories {
+      padding: 48px 24px 64px;
+    }
+    .wbdv-cat-header {
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+    }
+    .wbdv-cat-num { display: none; }
+    .wbdv-cat-title-block h2 { font-size: 28px; }
+    .wbdv-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 480px) {
+    .wbdv-hero { padding: 48px 20px 36px; }
+    .wbdv-hero-title { font-size: 36px; }
+    .wbdv-categories { padding: 36px 16px 48px; }
+    .wbdv-card-actions { flex-direction: column; }
+  }
+</style>
+
+<div class="wbdv-vault">
+
+  <!-- HERO -->
+  <section class="wbdv-hero">
+    <div class="wbdv-hero-inner">
+      <div>
+        <div class="wbdv-hero-eyebrow">Dealer Resources</div>
+        <h1 class="wbdv-hero-title">
+          The <span class="wbdv-title-accent">vault.</span><br>
+          For your store, signage, and online presence.
+        </h1>
+      </div>
+      <div class="wbdv-hero-meta">
+        <p>Logos, banners, and marketing assets approved for dealer use. Download the originals or copy the direct link to embed in your own marketing materials. Updated periodically — bookmark this page.</p>
+        <div class="wbdv-hero-stats" id="wbdv-stats" style="display:none;">
+          <div>
+            <div class="wbdv-stat-num" id="wbdv-stat-assets">0</div>
+            <div class="wbdv-stat-label">Assets</div>
+          </div>
+          <div>
+            <div class="wbdv-stat-num" id="wbdv-stat-cats">0</div>
+            <div class="wbdv-stat-label">Categories</div>
+          </div>
+          <div>
+            <div class="wbdv-stat-num" id="wbdv-stat-updated">—</div>
+            <div class="wbdv-stat-label">Last Updated</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES (rendered by JS) -->
+  <main class="wbdv-categories" id="wbdv-categories">
+    <div class="wbdv-loading">Loading vault…</div>
+  </main>
+
+</div>
+
+<script>
+(function(){
+  // ===== CONFIG ===========================================================
+  // Edit this URL to point at your manifest.json on GitHub raw, or wherever
+  // you choose to host it. Cache-bust query param ensures dealers always
+  // see the latest version even if a CDN caches the file.
+  var MANIFEST_URL = 'https://raw.githubusercontent.com/wos1337/wbd-dealer-vault/main/wbdc/manifest.json';
+
+  var el = function(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
+
+  function fmtSize(kb) {
+    if (kb == null) return '';
+    if (kb < 1024) return kb + ' KB';
+    return (kb / 1024).toFixed(1) + ' MB';
+  }
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    try {
+      var d = new Date(iso + 'T00:00:00');
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[d.getMonth()] + ' ' + d.getDate();
+    } catch(_) { return iso; }
+  }
+
+  function renderCard(asset) {
+    var card = el('article', 'wbdv-card');
+
+    // Thumbnail
+    var thumbWrap = el('div', 'wbdv-card-thumb');
+    if (asset.thumbnail) {
+      var img = el('img');
+      img.src = asset.thumbnail;
+      img.alt = asset.title || '';
+      img.onerror = function(){
+        thumbWrap.innerHTML = '';
+        thumbWrap.appendChild(el('span', 'wbdv-card-thumb-fallback', asset.format || 'asset'));
+      };
+      thumbWrap.appendChild(img);
+    } else {
+      thumbWrap.appendChild(el('span', 'wbdv-card-thumb-fallback', asset.format || 'asset'));
+    }
+    card.appendChild(thumbWrap);
+
+    // Body
+    var body = el('div', 'wbdv-card-body');
+
+    var meta = el('div', 'wbdv-card-meta');
+    if (asset.format) meta.appendChild(el('span', 'wbdv-card-format', asset.format));
+    if (asset.size_kb != null) {
+      meta.appendChild(el('span', 'wbdv-card-meta-sep', '·'));
+      meta.appendChild(el('span', 'wbdv-card-size', fmtSize(asset.size_kb)));
+    }
+    if (asset.dimensions) {
+      meta.appendChild(el('span', 'wbdv-card-meta-sep', '·'));
+      meta.appendChild(el('span', 'wbdv-card-dimensions', asset.dimensions));
+    }
+    body.appendChild(meta);
+
+    body.appendChild(el('h3', 'wbdv-card-title', asset.title || 'Untitled'));
+    if (asset.description) {
+      body.appendChild(el('p', 'wbdv-card-desc', asset.description));
+    }
+
+    // Actions
+    var actions = el('div', 'wbdv-card-actions');
+
+    var copyBtn = el('button', 'wbdv-btn');
+    copyBtn.type = 'button';
+    copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Link';
+    copyBtn.addEventListener('click', function(){
+      var fullUrl = asset.download_url;
+      // If relative, expand to absolute URL using current site origin
+      if (fullUrl && fullUrl.indexOf('http') !== 0) {
+        fullUrl = window.location.origin + fullUrl;
+      }
+      navigator.clipboard.writeText(fullUrl).then(function(){
+        copyBtn.classList.add('is-copied');
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied';
+        setTimeout(function(){
+          copyBtn.classList.remove('is-copied');
+          copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Link';
+        }, 1800);
+      }).catch(function(){
+        // Fallback: prompt user to copy manually
+        window.prompt('Copy this link:', fullUrl);
+      });
+    });
+    actions.appendChild(copyBtn);
+
+    var dlBtn = el('a', 'wbdv-btn is-primary');
+    dlBtn.href = asset.download_url || '#';
+    dlBtn.setAttribute('download', '');
+    dlBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download';
+    actions.appendChild(dlBtn);
+
+    body.appendChild(actions);
+    card.appendChild(body);
+    return card;
+  }
+
+  function renderCategory(cat, assets, index) {
+    var section = el('section', 'wbdv-category');
+
+    var header = el('div', 'wbdv-cat-header');
+    header.appendChild(el('div', 'wbdv-cat-num', String(index + 1).padStart(2, '0')));
+
+    var titleBlock = el('div', 'wbdv-cat-title-block');
+    titleBlock.appendChild(el('h2', null, cat.name));
+    if (cat.description) {
+      titleBlock.appendChild(el('p', 'wbdv-cat-desc', cat.description));
+    }
+    header.appendChild(titleBlock);
+
+    var count = el('div', 'wbdv-cat-count');
+    count.innerHTML = '<strong>' + assets.length + '</strong> ' + (assets.length === 1 ? 'asset' : 'assets');
+    header.appendChild(count);
+
+    section.appendChild(header);
+
+    if (assets.length === 0) {
+      section.appendChild(el('div', 'wbdv-empty', 'No assets in this category yet'));
+    } else {
+      var grid = el('div', 'wbdv-grid');
+      assets.forEach(function(a){ grid.appendChild(renderCard(a)); });
+      section.appendChild(grid);
+    }
+    return section;
+  }
+
+  function render(manifest) {
+    var container = document.getElementById('wbdv-categories');
+    container.innerHTML = '';
+
+    var assets = manifest.assets || [];
+    var cats = manifest.categories || [];
+
+    // Update stats
+    document.getElementById('wbdv-stat-assets').textContent = assets.length;
+    document.getElementById('wbdv-stat-cats').textContent = cats.length;
+    document.getElementById('wbdv-stat-updated').textContent = fmtDate(manifest.updated);
+    document.getElementById('wbdv-stats').style.display = 'flex';
+
+    if (cats.length === 0) {
+      container.appendChild(el('div', 'wbdv-empty', 'No categories defined yet. Edit manifest.json to get started.'));
+      return;
+    }
+
+    cats.forEach(function(cat, i){
+      var assetsInCat = assets.filter(function(a){ return a.category === cat.id; });
+      container.appendChild(renderCategory(cat, assetsInCat, i));
+    });
+  }
+
+  function renderError(msg) {
+    var container = document.getElementById('wbdv-categories');
+    container.innerHTML = '';
+    container.appendChild(el('div', 'wbdv-error', msg));
+  }
+
+  // Cache-bust on each load so dealers see latest manifest
+  fetch(MANIFEST_URL + '?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r){
+      if (!r.ok) throw new Error('Manifest fetch failed: HTTP ' + r.status);
+      return r.json();
+    })
+    .then(render)
+    .catch(function(err){
+      console.error('[WBDV] Manifest load error:', err);
+      renderError('Could not load resources. Please refresh, or contact your WBD rep if the issue persists.');
+    });
+})();
+</script>

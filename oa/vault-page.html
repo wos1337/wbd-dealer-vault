@@ -1,0 +1,612 @@
+<!--
+  Orange Aftermarket Dealer Resource Vault — paste into S4S extra page.
+  Settings:
+    - Restrict to: Registered Users Only
+    - Slug: dealer-resources (or your choice)
+
+  Updates: edit manifest.json in the GitHub repo. The page reads it on load.
+  Works inside frame.html (header/footer/styles inherited from S4S theme).
+-->
+
+<style>
+  /* Scope everything under .oadv-vault to avoid leaking into the S4S frame */
+  .oadv-vault {
+    --vlt-bg:        #fafafa;
+    --vlt-surface:   #ffffff;
+    --vlt-surface-2: #f5f5f5;
+    --vlt-line:      #e5e5e5;
+    --vlt-line-soft: #efefef;
+    --vlt-text:      #1a1a1a;
+    --vlt-text-2:    #525252;
+    --vlt-text-3:    #8a8a8a;
+    --vlt-accent:    #E55300;
+    --vlt-accent-dk: #c44a00;
+    --vlt-accent-tint: #fff5ed;
+    --vlt-charcoal:  #1c1c1c;
+    font-family: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+    color: var(--vlt-text);
+    background: var(--vlt-bg);
+    margin: 0 calc(50% - 50vw);
+    padding: 0;
+    width: 100vw;
+    box-sizing: border-box;
+    line-height: 1.55;
+  }
+  .oadv-vault * { box-sizing: border-box; }
+
+  /* === Hero ============================================================== */
+  .oadv-hero {
+    position: relative;
+    background: var(--vlt-charcoal);
+    color: #fafafa;
+    padding: 96px 48px 80px;
+    overflow: hidden;
+  }
+  .oadv-hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--vlt-accent);
+  }
+  .oadv-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: -40px;
+    width: 320px; height: 320px;
+    border: 1px solid rgba(229, 83, 0, 0.18);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .oadv-hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 56px;
+    align-items: end;
+    position: relative;
+  }
+  .oadv-hero-eyebrow {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--vlt-accent);
+    margin: 0 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .oadv-hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 36px; height: 2px;
+    background: var(--vlt-accent);
+  }
+  .oadv-hero-title {
+    font-family: 'Barlow Condensed', 'Barlow', sans-serif;
+    font-size: clamp(44px, 6vw, 76px);
+    font-weight: 700;
+    line-height: 0.94;
+    letter-spacing: -0.015em;
+    color: #fafafa;
+    margin: 0;
+    text-transform: uppercase;
+  }
+  .oadv-hero-title em {
+    font-style: normal;
+    color: var(--vlt-accent);
+  }
+  .oadv-hero-meta {
+    padding-left: 36px;
+    border-left: 2px solid var(--vlt-accent);
+  }
+  .oadv-hero-meta p {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 460px;
+  }
+  .oadv-hero-stats {
+    display: flex;
+    gap: 36px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .oadv-stat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #fafafa;
+    line-height: 1;
+  }
+  .oadv-stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 6px;
+  }
+
+  /* === Loading / error states =========================================== */
+  .oadv-loading,
+  .oadv-error {
+    max-width: 1280px;
+    margin: 80px auto;
+    padding: 48px;
+    text-align: center;
+    color: var(--vlt-text-3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .oadv-error {
+    color: #a84444;
+    border: 1px solid #f0c8c8;
+    background: #fdf4f4;
+  }
+
+  /* === Categories ======================================================== */
+  .oadv-categories {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 72px 48px 96px;
+  }
+  .oadv-category {
+    margin-bottom: 80px;
+  }
+  .oadv-category:last-child { margin-bottom: 0; }
+
+  .oadv-cat-header {
+    display: grid;
+    grid-template-columns: 88px 1fr auto;
+    gap: 32px;
+    align-items: baseline;
+    padding-bottom: 24px;
+    margin-bottom: 28px;
+    border-bottom: 2px solid var(--vlt-charcoal);
+  }
+  .oadv-cat-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--vlt-accent);
+  }
+  .oadv-cat-title-block h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    color: var(--vlt-charcoal);
+    letter-spacing: -0.005em;
+  }
+  .oadv-cat-desc {
+    color: var(--vlt-text-2);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 720px;
+  }
+  .oadv-cat-count {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--vlt-text-3);
+    white-space: nowrap;
+  }
+  .oadv-cat-count strong {
+    color: var(--vlt-charcoal);
+    font-size: 14px;
+  }
+
+  /* === Asset grid ======================================================== */
+  .oadv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .oadv-card {
+    background: var(--vlt-surface);
+    border: 1px solid var(--vlt-line);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.18s ease;
+  }
+  .oadv-card:hover {
+    border-color: var(--vlt-accent);
+    box-shadow: 0 4px 20px rgba(229, 83, 0, 0.08);
+    transform: translateY(-2px);
+  }
+  .oadv-card-thumb {
+    aspect-ratio: 4 / 3;
+    background: var(--vlt-surface-2);
+    background-image:
+      linear-gradient(45deg, #ebebeb 25%, transparent 25%),
+      linear-gradient(-45deg, #ebebeb 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #ebebeb 75%),
+      linear-gradient(-45deg, transparent 75%, #ebebeb 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid var(--vlt-line);
+  }
+  .oadv-card-thumb img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    display: block;
+  }
+  .oadv-card-thumb-fallback {
+    color: var(--vlt-text-3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .oadv-card-body {
+    padding: 20px 22px 18px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .oadv-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--vlt-text-3);
+  }
+  .oadv-card-format {
+    color: var(--vlt-accent);
+    border: 1px solid var(--vlt-accent);
+    padding: 2px 8px;
+    border-radius: 2px;
+    background: var(--vlt-accent-tint);
+  }
+  .oadv-card-meta-sep {
+    color: var(--vlt-line);
+  }
+  .oadv-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--vlt-charcoal);
+    margin: 0 0 8px;
+    letter-spacing: -0.005em;
+  }
+  .oadv-card-desc {
+    color: var(--vlt-text-2);
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0 0 18px;
+    flex: 1;
+  }
+  .oadv-card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--vlt-line-soft);
+  }
+  .oadv-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid var(--vlt-line);
+    background: var(--vlt-surface);
+    color: var(--vlt-charcoal);
+    transition: all 0.15s ease;
+  }
+  .oadv-btn:hover {
+    border-color: var(--vlt-accent);
+    color: var(--vlt-accent);
+    text-decoration: none;
+  }
+  .oadv-btn.is-primary {
+    background: var(--vlt-accent);
+    border-color: var(--vlt-accent);
+    color: #ffffff;
+  }
+  .oadv-btn.is-primary:hover {
+    background: var(--vlt-accent-dk);
+    border-color: var(--vlt-accent-dk);
+    color: #ffffff;
+  }
+  .oadv-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+  .oadv-btn.is-copied {
+    background: var(--vlt-charcoal);
+    border-color: var(--vlt-charcoal);
+    color: #ffffff;
+  }
+
+  /* === Empty category ==================================================== */
+  .oadv-empty {
+    padding: 48px;
+    text-align: center;
+    color: var(--vlt-text-3);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--vlt-surface);
+    border: 1px dashed var(--vlt-line);
+  }
+
+  /* === Responsive ======================================================== */
+  @media (max-width: 900px) {
+    .oadv-hero { padding: 64px 24px 56px; }
+    .oadv-hero-inner {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    .oadv-hero-meta {
+      border-left: none;
+      border-top: 2px solid var(--vlt-accent);
+      padding-left: 0;
+      padding-top: 28px;
+    }
+    .oadv-categories { padding: 56px 24px 64px; }
+    .oadv-cat-header {
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+    }
+    .oadv-cat-num { display: none; }
+    .oadv-cat-title-block h2 { font-size: 28px; }
+    .oadv-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 480px) {
+    .oadv-hero { padding: 56px 20px 44px; }
+    .oadv-hero-title { font-size: 38px; }
+    .oadv-categories { padding: 36px 16px 48px; }
+    .oadv-card-actions { flex-direction: column; }
+  }
+</style>
+
+<div class="oadv-vault">
+
+  <!-- HERO -->
+  <section class="oadv-hero">
+    <div class="oadv-hero-inner">
+      <div>
+        <div class="oadv-hero-eyebrow">Dealer Resources</div>
+        <h1 class="oadv-hero-title">
+          Marketing<br>
+          <em>Vault.</em>
+        </h1>
+      </div>
+      <div class="oadv-hero-meta">
+        <p>Logos, banners, and marketing assets approved for Orange Aftermarket dealer use. Download the originals or copy the direct link to embed in your store signage, website, or sales materials. Updated periodically — bookmark this page for ongoing access.</p>
+        <div class="oadv-hero-stats" id="oadv-stats" style="display:none;">
+          <div>
+            <div class="oadv-stat-num" id="oadv-stat-assets">0</div>
+            <div class="oadv-stat-label">Assets</div>
+          </div>
+          <div>
+            <div class="oadv-stat-num" id="oadv-stat-cats">0</div>
+            <div class="oadv-stat-label">Categories</div>
+          </div>
+          <div>
+            <div class="oadv-stat-num" id="oadv-stat-updated">—</div>
+            <div class="oadv-stat-label">Last Updated</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES (rendered by JS) -->
+  <main class="oadv-categories" id="oadv-categories">
+    <div class="oadv-loading">Loading vault…</div>
+  </main>
+
+</div>
+
+<script>
+(function(){
+  // ===== CONFIG ===========================================================
+  // Edit this URL to point at your manifest.json on GitHub raw, or wherever
+  // you choose to host it. Cache-bust query param ensures dealers always
+  // see the latest version even if a CDN caches the file.
+  var MANIFEST_URL = 'https://raw.githubusercontent.com/wos1337/wbd-dealer-vault/main/oa/manifest.json';
+
+  var el = function(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
+
+  function fmtSize(kb) {
+    if (kb == null) return '';
+    if (kb < 1024) return kb + ' KB';
+    return (kb / 1024).toFixed(1) + ' MB';
+  }
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    try {
+      var d = new Date(iso + 'T00:00:00');
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return months[d.getMonth()] + ' ' + d.getDate();
+    } catch(_) { return iso; }
+  }
+
+  function renderCard(asset) {
+    var card = el('article', 'oadv-card');
+
+    // Thumbnail
+    var thumbWrap = el('div', 'oadv-card-thumb');
+    if (asset.thumbnail) {
+      var img = el('img');
+      img.src = asset.thumbnail;
+      img.alt = asset.title || '';
+      img.onerror = function(){
+        thumbWrap.innerHTML = '';
+        thumbWrap.appendChild(el('span', 'oadv-card-thumb-fallback', asset.format || 'asset'));
+      };
+      thumbWrap.appendChild(img);
+    } else {
+      thumbWrap.appendChild(el('span', 'oadv-card-thumb-fallback', asset.format || 'asset'));
+    }
+    card.appendChild(thumbWrap);
+
+    // Body
+    var body = el('div', 'oadv-card-body');
+
+    var meta = el('div', 'oadv-card-meta');
+    if (asset.format) meta.appendChild(el('span', 'oadv-card-format', asset.format));
+    if (asset.size_kb != null) {
+      meta.appendChild(el('span', 'oadv-card-meta-sep', '·'));
+      meta.appendChild(el('span', null, fmtSize(asset.size_kb)));
+    }
+    if (asset.dimensions) {
+      meta.appendChild(el('span', 'oadv-card-meta-sep', '·'));
+      meta.appendChild(el('span', null, asset.dimensions));
+    }
+    body.appendChild(meta);
+
+    body.appendChild(el('h3', 'oadv-card-title', asset.title || 'Untitled'));
+    if (asset.description) {
+      body.appendChild(el('p', 'oadv-card-desc', asset.description));
+    }
+
+    // Actions
+    var actions = el('div', 'oadv-card-actions');
+
+    var copyBtn = el('button', 'oadv-btn');
+    copyBtn.type = 'button';
+    copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Link';
+    copyBtn.addEventListener('click', function(){
+      var fullUrl = asset.download_url;
+      if (fullUrl && fullUrl.indexOf('http') !== 0) {
+        fullUrl = window.location.origin + fullUrl;
+      }
+      navigator.clipboard.writeText(fullUrl).then(function(){
+        copyBtn.classList.add('is-copied');
+        copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied';
+        setTimeout(function(){
+          copyBtn.classList.remove('is-copied');
+          copyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Link';
+        }, 1800);
+      }).catch(function(){
+        window.prompt('Copy this link:', fullUrl);
+      });
+    });
+    actions.appendChild(copyBtn);
+
+    var dlBtn = el('a', 'oadv-btn is-primary');
+    dlBtn.href = asset.download_url || '#';
+    dlBtn.setAttribute('download', '');
+    dlBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download';
+    actions.appendChild(dlBtn);
+
+    body.appendChild(actions);
+    card.appendChild(body);
+    return card;
+  }
+
+  function renderCategory(cat, assets, index) {
+    var section = el('section', 'oadv-category');
+
+    var header = el('div', 'oadv-cat-header');
+    header.appendChild(el('div', 'oadv-cat-num', String(index + 1).padStart(2, '0')));
+
+    var titleBlock = el('div', 'oadv-cat-title-block');
+    titleBlock.appendChild(el('h2', null, cat.name));
+    if (cat.description) {
+      titleBlock.appendChild(el('p', 'oadv-cat-desc', cat.description));
+    }
+    header.appendChild(titleBlock);
+
+    var count = el('div', 'oadv-cat-count');
+    count.innerHTML = '<strong>' + assets.length + '</strong> ' + (assets.length === 1 ? 'asset' : 'assets');
+    header.appendChild(count);
+
+    section.appendChild(header);
+
+    if (assets.length === 0) {
+      section.appendChild(el('div', 'oadv-empty', 'No assets in this category yet'));
+    } else {
+      var grid = el('div', 'oadv-grid');
+      assets.forEach(function(a){ grid.appendChild(renderCard(a)); });
+      section.appendChild(grid);
+    }
+    return section;
+  }
+
+  function render(manifest) {
+    var container = document.getElementById('oadv-categories');
+    container.innerHTML = '';
+
+    var assets = manifest.assets || [];
+    var cats = manifest.categories || [];
+
+    document.getElementById('oadv-stat-assets').textContent = assets.length;
+    document.getElementById('oadv-stat-cats').textContent = cats.length;
+    document.getElementById('oadv-stat-updated').textContent = fmtDate(manifest.updated);
+    document.getElementById('oadv-stats').style.display = 'flex';
+
+    if (cats.length === 0) {
+      container.appendChild(el('div', 'oadv-empty', 'No categories defined yet. Edit manifest.json to get started.'));
+      return;
+    }
+
+    cats.forEach(function(cat, i){
+      var assetsInCat = assets.filter(function(a){ return a.category === cat.id; });
+      container.appendChild(renderCategory(cat, assetsInCat, i));
+    });
+  }
+
+  function renderError(msg) {
+    var container = document.getElementById('oadv-categories');
+    container.innerHTML = '';
+    container.appendChild(el('div', 'oadv-error', msg));
+  }
+
+  fetch(MANIFEST_URL + '?t=' + Date.now(), { cache: 'no-store' })
+    .then(function(r){
+      if (!r.ok) throw new Error('Manifest fetch failed: HTTP ' + r.status);
+      return r.json();
+    })
+    .then(render)
+    .catch(function(err){
+      console.error('[OADV] Manifest load error:', err);
+      renderError('Could not load resources. Please refresh, or contact your Orange Aftermarket rep if the issue persists.');
+    });
+})();
+</script>
