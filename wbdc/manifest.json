@@ -6,7 +6,7 @@
     {
       "id": "logos",
       "name": "Logos",
-      "description": "Official Wiedmann Bros logos for use in dealer marketing materials. Available in multiple formats and color treatments."
+      "description": "Official Wiedmann Bros Distributing logos in multiple color treatments and formats. SVG for scalable use in print and high-resolution web; PNG for quick drag-and-drop into documents and email signatures."
     },
     {
       "id": "banners",
@@ -16,14 +16,98 @@
   ],
   "assets": [
     {
-      "id": "wbd-logo-primary-svg",
+      "id": "wbdc-logo-black-svg",
       "category": "logos",
-      "title": "WBD Primary Logo (SVG)",
-      "description": "Vector logo with full \"Wiedmann Bros Distributing\" wordmark. Scales to any size — recommended for print and high-resolution web use.",
-      "thumbnail": "/assets/images/vault/thumbs/wbd-logo-primary.png",
-      "download_url": "/assets/images/vault/files/wbd-logo-primary.svg",
+      "title": "WBDC Logo — Black (SVG)",
+      "description": "Solid black logo. Use on white or light-colored backgrounds. Vector format scales to any size — recommended for print, signage, and high-resolution web.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-Black.png",
+      "download_url": "/assets/images/Media-vault/WBDC-Black.svg",
       "format": "SVG",
-      "size_kb": 12,
+      "size_kb": 4,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-black-png",
+      "category": "logos",
+      "title": "WBDC Logo — Black (PNG)",
+      "description": "Solid black logo, raster format. Use for email signatures, slide decks, and quick drag-and-drop scenarios where SVG isn't supported.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-Black.png",
+      "download_url": "/assets/images/Media-vault/WBDC-Black.png",
+      "format": "PNG",
+      "size_kb": 11,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-white-svg",
+      "category": "logos",
+      "title": "WBDC Logo — White (SVG)",
+      "description": "Solid white logo. Use on dark or photographic backgrounds. Vector format scales to any size — recommended for print, signage, and high-resolution web.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-White.png",
+      "download_url": "/assets/images/Media-vault/WBDC-White.svg",
+      "format": "SVG",
+      "size_kb": 4,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-white-png",
+      "category": "logos",
+      "title": "WBDC Logo — White (PNG)",
+      "description": "Solid white logo, raster format. Use for email signatures, slide decks, and other contexts where SVG isn't supported. Transparent background.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-White.png",
+      "download_url": "/assets/images/Media-vault/WBDC-White.png",
+      "format": "PNG",
+      "size_kb": 11,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-white-green-svg",
+      "category": "logos",
+      "title": "WBDC Logo — White + Green Accent (SVG)",
+      "description": "Two-tone logo treatment with white wordmark and lime green accent. The signature brand presentation — preferred treatment when on dark backgrounds where color is appropriate.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-White-Green.png",
+      "download_url": "/assets/images/Media-vault/WBDC-White-Green.svg",
+      "format": "SVG",
+      "size_kb": 4,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-white-green-png",
+      "category": "logos",
+      "title": "WBDC Logo — White + Green Accent (PNG)",
+      "description": "Signature two-tone brand treatment in raster format. Use for email signatures, slide decks, social posts, and quick-share scenarios.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-White-Green.png",
+      "download_url": "/assets/images/Media-vault/WBDC-White-Green.png",
+      "format": "PNG",
+      "size_kb": 11,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-varwhite-skew-svg",
+      "category": "logos",
+      "title": "WBDC Logo — Variable White Skew (SVG)",
+      "description": "Stylized white logo variant with skewed letterforms. Alternate display treatment — use selectively where a more dynamic mark is appropriate.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-VarWhite-Skew.png",
+      "download_url": "/assets/images/Media-vault/WBDC-VarWhite-Skew.svg",
+      "format": "SVG",
+      "size_kb": 3,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-varwhite-skew-png",
+      "category": "logos",
+      "title": "WBDC Logo — Variable White Skew (PNG)",
+      "description": "Stylized white logo variant in raster format. Alternate display treatment — use selectively for dynamic placements.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-VarWhite-Skew.png",
+      "download_url": "/assets/images/Media-vault/WBDC-VarWhite-Skew.png",
+      "format": "PNG",
+      "size_kb": 11,
       "dimensions": null,
       "added": "2026-05-06"
     }
