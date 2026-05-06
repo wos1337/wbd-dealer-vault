@@ -11,7 +11,7 @@
     {
       "id": "banners",
       "name": "Web Banners",
-      "description": "Pre-made banners for use on dealer websites, email signatures, and digital displays. Standard IAB ad sizes provided."
+      "description": "Pre-made banners for use on dealer websites, email signatures, and digital displays. SVG scales crisply to any size; PNG fallbacks at 2× resolution included for systems that don't accept SVG."
     }
   ],
   "assets": [
@@ -63,6 +63,104 @@
       "dimensions": null,
       "added": "2026-05-06"
     },
+    {
+      "id": "wbdc-logo-white-green-svg",
+      "category": "logos",
+      "title": "WBDC Logo — White + Green Accent (SVG)",
+      "description": "Two-tone logo treatment with white wordmark and lime green accent. The signature brand presentation — preferred treatment when on dark backgrounds where color is appropriate.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-White-Green.png",
+      "download_url": "/assets/images/Media-vault/WBDC-White-Green.svg",
+      "format": "SVG",
+      "size_kb": 4,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-white-green-png",
+      "category": "logos",
+      "title": "WBDC Logo — White + Green Accent (PNG)",
+      "description": "Signature two-tone brand treatment in raster format. Use for email signatures, slide decks, social posts, and quick-share scenarios.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-White-Green.png",
+      "download_url": "/assets/images/Media-vault/WBDC-White-Green.png",
+      "format": "PNG",
+      "size_kb": 11,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-varwhite-skew-svg",
+      "category": "logos",
+      "title": "WBDC Logo — Variable White Skew (SVG)",
+      "description": "Stylized white logo variant with skewed letterforms. Alternate display treatment — use selectively where a more dynamic mark is appropriate.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-VarWhite-Skew.png",
+      "download_url": "/assets/images/Media-vault/WBDC-VarWhite-Skew.svg",
+      "format": "SVG",
+      "size_kb": 3,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-logo-varwhite-skew-png",
+      "category": "logos",
+      "title": "WBDC Logo — Variable White Skew (PNG)",
+      "description": "Stylized white logo variant in raster format. Alternate display treatment — use selectively for dynamic placements.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-VarWhite-Skew.png",
+      "download_url": "/assets/images/Media-vault/WBDC-VarWhite-Skew.png",
+      "format": "PNG",
+      "size_kb": 11,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-banner-authdealer-horizontal-svg",
+      "category": "banners",
+      "title": "Authorized Dealer Banner — Horizontal (SVG)",
+      "description": "600×200 horizontal banner for use in dealer-website footer rows, sidebars, or homepage strips. Communicates authorized dealer status, aftermarket accessory category, and equipment coverage (UTV, Tractor, Mower, Construction). SVG scales crisply to any size.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-AuthDealer-Horizontal-600x200.png",
+      "download_url": "/assets/images/Media-vault/WBDC-AuthDealer-Horizontal-600x200.svg",
+      "format": "SVG",
+      "size_kb": 6,
+      "dimensions": "600×200",
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-banner-authdealer-horizontal-png",
+      "category": "banners",
+      "title": "Authorized Dealer Banner — Horizontal (PNG)",
+      "description": "Horizontal banner in raster format, 1200×400 source for retina-ready display at 600×200. Drop-in fallback for systems that don't accept SVG (some email signature builders, older CMS platforms).",
+      "thumbnail": "/assets/images/Media-vault/WBDC-AuthDealer-Horizontal-600x200.png",
+      "download_url": "/assets/images/Media-vault/WBDC-AuthDealer-Horizontal-600x200.png",
+      "format": "PNG",
+      "size_kb": 41,
+      "dimensions": "600×200",
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-banner-authdealer-vertical-svg",
+      "category": "banners",
+      "title": "Authorized Dealer Banner — Vertical (SVG)",
+      "description": "300×600 vertical banner for sidebar slots and rail placements on dealer websites. Communicates authorized dealer status with full hierarchy: AUTHORIZED DEALER, aftermarket accessory positioning, equipment categories, and SOLD HERE reinforcement. SVG scales crisply to any size.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-AuthDealer-Vertical-300x600.png",
+      "download_url": "/assets/images/Media-vault/WBDC-AuthDealer-Vertical-300x600.svg",
+      "format": "SVG",
+      "size_kb": 7,
+      "dimensions": "300×600",
+      "added": "2026-05-06"
+    },
+    {
+      "id": "wbdc-banner-authdealer-vertical-png",
+      "category": "banners",
+      "title": "Authorized Dealer Banner — Vertical (PNG)",
+      "description": "Vertical banner in raster format, 600×1200 source for retina-ready display at 300×600. Drop-in fallback for systems that don't accept SVG.",
+      "thumbnail": "/assets/images/Media-vault/WBDC-AuthDealer-Vertical-300x600.png",
+      "download_url": "/assets/images/Media-vault/WBDC-AuthDealer-Vertical-300x600.png",
+      "format": "PNG",
+      "size_kb": 54,
+      "dimensions": "300×600",
+      "added": "2026-05-06"
+    }
+  ]
+}    },
     {
       "id": "wbdc-logo-white-green-svg",
       "category": "logos",
