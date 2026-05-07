@@ -12,6 +12,12 @@
       "id": "banners",
       "name": "Web Banners",
       "description": "Pre-made banners for use on dealer websites, email signatures, and digital displays. SVG scales crisply to any size; PNG fallbacks at 2× resolution included for systems that don't accept SVG."
+    },
+    {
+      "id": "flyers",
+      "name": "Flyers",
+      "description": "Brand-supplied marketing flyers and product sheets. Select a brand below to view available downloads.",
+      "filter_by": "brand"
     }
   ],
   "assets": [
@@ -157,6 +163,136 @@
       "format": "PNG",
       "size_kb": 54,
       "dimensions": "300×600",
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-turf-flyer",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "Turf Flyer — Overview",
+      "description": "Umbrella turf-application flyer covering Michelin X Tweel Turf across mower brands. Use as a general-purpose handout for turf customers.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/Turf%20Flyer.pdf",
+      "format": "PDF",
+      "size_kb": 2669,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-turf-badboy",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "Turf Flyer — Bad Boy",
+      "description": "Michelin X Tweel Turf flyer with Bad Boy mower fitments and recommended sizes.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/Brand-Turf_Flyer-BadBoy.pdf",
+      "format": "PDF",
+      "size_kb": 2043,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-turf-spartan",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "Turf Flyer — Spartan",
+      "description": "Michelin X Tweel Turf flyer with Spartan mower fitments and recommended sizes.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/Brand-Turf_Flyer-Spartan.pdf",
+      "format": "PDF",
+      "size_kb": 2252,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-turf-toro",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "Turf Flyer — Toro",
+      "description": "Michelin X Tweel Turf flyer with Toro mower fitments and recommended sizes.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/Brand-Turf_Flyer-Toro.pdf",
+      "format": "PDF",
+      "size_kb": 2110,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-turf-wright",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "Turf Flyer — Wright",
+      "description": "Michelin X Tweel Turf flyer with Wright mower fitments and recommended sizes.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/Brand-Turf_Flyer-Wright.pdf",
+      "format": "PDF",
+      "size_kb": 3434,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-turf-grasshopper",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "Turf Flyer — Grasshopper",
+      "description": "Michelin X Tweel Turf flyer with Grasshopper mower fitments and recommended sizes.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/Brand-Turf_Flyer-Grasshopper.pdf",
+      "format": "PDF",
+      "size_kb": 1985,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-turf-hustler",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "Turf Flyer — Hustler",
+      "description": "Michelin X Tweel Turf flyer with Hustler mower fitments and recommended sizes.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/Brand-Turf_Flyer-Hustler.pdf",
+      "format": "PDF",
+      "size_kb": 2128,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-turf-kubota",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "Turf Flyer — Kubota",
+      "description": "Michelin X Tweel Turf flyer with Kubota mower fitments and recommended sizes.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/Brand-Turf_Flyer-Kubota.pdf",
+      "format": "PDF",
+      "size_kb": 2312,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-utv-flyer",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "UTV Flyer",
+      "description": "Michelin X Tweel UTV product flyer with sizing, fitment, and feature highlights for utility vehicle applications.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/UTV%20Flyer.pdf",
+      "format": "PDF",
+      "size_kb": 1292,
+      "dimensions": null,
+      "added": "2026-05-06"
+    },
+    {
+      "id": "michelin-flyer-ssl-flyer",
+      "category": "flyers",
+      "brand": "Michelin",
+      "title": "Skid Steer Loader Flyer",
+      "description": "Michelin X Tweel SSL (Skid Steer Loader) product flyer with sizing, fitment, and feature highlights.",
+      "thumbnail": null,
+      "download_url": "/assets/images/Media-Vault/Flyers/Michelin/SSL%20Flyer.pdf",
+      "format": "PDF",
+      "size_kb": 1519,
+      "dimensions": null,
       "added": "2026-05-06"
     }
   ]
